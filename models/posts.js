@@ -44,12 +44,7 @@ postsSchema.methods.deleteImageUrl = async function () {
 };
 
 postsSchema.statics.createImageUrl = async function (imageName, buffer, type) {
-  const params = {
-    Bucket: bucketName,
-    Key: imageName,
-    Body: buffer,
-    ContentType: type,
-  };
+  const params = { Bucket: bucketName, Key: imageName, Body: buffer };
 
   const command = new PutObjectCommand(params);
   await s3.send(command);
