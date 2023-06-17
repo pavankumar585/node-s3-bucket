@@ -21,10 +21,7 @@ const postsSchema = new mongoose.Schema({
     minlength: 20,
     maxlength: 5000,
   },
-  imageName: {
-    type: String,
-    required: true,
-  },
+  imageName: { type: String, required: true },
   image_url: String,
 });
 

@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const storage = multer.memoryStorage();
+const validateId = require("../middleware/validateId");
 const { randomString } = require("../utils/randomString");
 const { Post, validate } = require("../models/posts");
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const fileFilter = require("../middleware/filefilter");
+
+const upload = multer({ storage, fileFilter, limits: { fileSize: 1000000 } });
 
 router.get("/", async (req, res) => {
   try {
@@ -44,7 +47,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-router.put("/:id", upload.single("image"), async (req, res) => {
+router.put("/:id", validateId, upload.single("image"), async (req, res) => {
   try {
     const { error } = validate(req.body);
     if (error) return res.status(400).json(error.details[0].message);
@@ -86,7 +89,7 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validateId, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
